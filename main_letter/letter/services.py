@@ -11,6 +11,5 @@ def search_letter(text):
 
 def search_first_unique_letter(word):
     for l in word:
-        match word.count(l):
-            case 1:
-                return l
+        if word.count(l) == 1:
+            return l
