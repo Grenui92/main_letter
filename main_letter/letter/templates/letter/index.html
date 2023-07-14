@@ -1,16 +1,19 @@
 {% extends 'letter/base.html ' %}
 
 {% block content %}
+<div class="container-fluid">
+  <h3>Main letter</h3>
+</div>
 
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <textarea id="chat-log" class="form-control" rows="20"></textarea>
+      <textarea id="chat-log" class="form-control" rows="16"></textarea>
     </div>
   </div>
   <div class="row">
     <div class="col-md-9">
-      <input id="chat-message-input" type="text" class="form-control">
+      <textarea id="chat-message-input" class="form-control" rows="8" placeholder="Input your text"></textarea>
     </div>
     <div class="col-md-3">
       <button id="chat-message-submit" type="button" class="btn btn-primary">Send</button>
@@ -18,38 +21,45 @@
   </div>
 </div>
 <script>
-    const chatSocket = new WebSocket(
-        'ws://'
-        + window.location.host
-        + '/ws/main_letter/'
-        + '/'
-    );
+const chatSocket = new WebSocket(
+  'ws://' + window.location.host + '/ws/main_letter/' + '/'
+);
 
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        document.querySelector('#chat-log').value += (data.message + '\n');
-    };
+chatSocket.onmessage = function(e) {
+  const data = JSON.parse(e.data);
+  const chatLog = document.querySelector('#chat-log');
+  chatLog.value += (data.message + '\n');
+  chatLog.scrollTop = chatLog.scrollHeight;  // Scroll to the bottom of the chat log
+};
 
-    chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
-    };
+chatSocket.onclose = function(e) {
+  console.error('Chat socket closed unexpectedly');
+};
 
-    document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {  // enter, return
-            document.querySelector('#chat-message-submit').click();
-        }
-    };
+const messageInputDom = document.querySelector('#chat-message-input');
+messageInputDom.focus();
 
-    document.querySelector('#chat-message-submit').onclick = function(e) {
-        const messageInputDom = document.querySelector('#chat-message-input');
-        const message = messageInputDom.value;
-        chatSocket.send(JSON.stringify({
-            'input_text': message
-        }));
-        document.querySelector('#chat-log').value += ('You: ' + message + '\n');
-        messageInputDom.value = '';
-    };
+messageInputDom.onkeyup = function(e) {
+  if (e.keyCode === 13) {  // Enter or Return key
+    document.querySelector('#chat-message-submit').click();
+  }
+};
+
+document.querySelector('#chat-message-submit').onclick = function(e) {
+  const messageInputDom = document.querySelector('#chat-message-input');
+  const message = messageInputDom.value;
+
+  chatSocket.send(JSON.stringify({
+    'input_text': message
+  }));
+
+  const chatLog = document.querySelector('#chat-log');
+  chatLog.value += ('You: ' + message + '\n');
+  chatLog.scrollTop = chatLog.scrollHeight;  // Scroll to the bottom of the chat log
+
+  messageInputDom.value = '';
+};
+
 </script>
 
 {% endblock %}

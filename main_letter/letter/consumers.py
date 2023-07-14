@@ -2,6 +2,8 @@ import json
 
 from channels.generic.websocket import WebsocketConsumer
 
+from letter.services import search_letter
+
 class MainLetterConsumer(WebsocketConsumer):
 
     def connect(self):
@@ -15,4 +17,8 @@ class MainLetterConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         input_text = text_data_json.get('input_text')
 
-        self.send(text_data=json.dumps({'message': f'The letter you are looking for: {input_text}\n'}))
+        target_letter = search_letter(input_text)
+
+        self.send(text_data=json.dumps(
+            {'message': f'<-----\nThe letter you are looking for: {target_letter}\n----->\n'}
+        ))
