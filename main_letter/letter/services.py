@@ -10,6 +10,6 @@ def search_letter(text):
     return search_first_unique_letter(letters_list)
 
 def search_first_unique_letter(word):
-    for l in word:
-        if word.count(l) == 1:
-            return l
+    for letter in word:
+        if word.count(letter) == 1:
+            return letter
