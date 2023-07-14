@@ -17,3 +17,6 @@ class MainLetterView(View):
                     else 
                     f"\nYour request:\n{message}\n \nSorry, there are no unique letters here.\n")
         return JsonResponse({"response": response})
+
+    def get(self, request):
+        return render(request, "letter/index.html")
