@@ -8,6 +8,9 @@ packages = [{include = "main_letter"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+django = "^4.2.3"
+channels = "^4.0.0"
+daphne = "^4.0.0"
 
 
 [build-system]
