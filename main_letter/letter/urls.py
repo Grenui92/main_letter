@@ -5,5 +5,5 @@ from letter import views
 app_name = 'letter'
 
 urlpatterns = [
-    path('', views.give_letter, name='give_letter')
+    path('', views.MainLetterView.as_view(), name='give_letter')
 ]
